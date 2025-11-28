@@ -40,16 +40,16 @@ end;
 $$ language plpgsql;
 
 create or replace function create_user(
-	id uuid,
-	username varchar(100),
-	email varchar(100),
-	password_hash varchar(100)
+	p_id uuid,
+	p_username varchar(100),
+	p_email varchar(100),
+	p_password_hash varchar(100)
 ) returns uuid as $$
 begin
 	insert into Users (Id, Username, Email, PasswordHash)
-	values (create_user.*);
+	values (p_id, p_username, p_email, p_password_hash);
 	
-	return id;
+	return p_id;
 end;
 $$ language plpgsql;
 
