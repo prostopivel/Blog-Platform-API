@@ -13,6 +13,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{99181F4F-D12C-4C62-B859-283448E00EB4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{AC75077C-0000-4712-B884-F4C3D25B621F}"
+	ProjectSection(SolutionItems) = preProject
+		docker\.env = docker\.env
+		docker\analytics.Dockerfile = docker\analytics.Dockerfile
+		docker\auth.Dockerfile = docker\auth.Dockerfile
+		docker\blog.Dockerfile = docker\blog.Dockerfile
+		docker\docker-compose.yml = docker\docker-compose.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BlogPlatform.Auth", "BlogPlatform.Auth", "{4F625579-A0F9-4A4F-80D7-63CA91D7D6EA}"
 EndProject
@@ -85,6 +92,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogPlatform.Shared.Caching", "src\BlogPlatform.Shared\BlogPlatform.Shared.Caching\BlogPlatform.Shared.Caching.csproj", "{558A23CF-0184-41BB-9270-84FF39B40754}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogPlatform.Shared.API", "src\BlogPlatform.Shared\BlogPlatform.Shared.API\BlogPlatform.Shared.API.csproj", "{8EAAC7A6-342D-49A7-817F-7680A546FBB9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "init-scripts", "init-scripts", "{95CBF33B-9077-40A0-9F8B-4126EB07FEFA}"
+	ProjectSection(SolutionItems) = preProject
+		docker\init-scripts\auth-init.sql = docker\init-scripts\auth-init.sql
+		docker\init-scripts\blog-init.sql = docker\init-scripts\blog-init.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -257,6 +270,7 @@ Global
 		{4497C8B7-42E4-4BE2-92C8-0D5100624B0C} = {5F4C2FCD-983A-4B75-862E-1079785C8232}
 		{558A23CF-0184-41BB-9270-84FF39B40754} = {5F4C2FCD-983A-4B75-862E-1079785C8232}
 		{8EAAC7A6-342D-49A7-817F-7680A546FBB9} = {5F4C2FCD-983A-4B75-862E-1079785C8232}
+		{95CBF33B-9077-40A0-9F8B-4126EB07FEFA} = {AC75077C-0000-4712-B884-F4C3D25B621F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CDFABFF-6247-45B0-A88B-2E92D745EF22}
