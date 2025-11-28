@@ -1,3 +1,5 @@
+create extension if not exists "uuid-ossp";
+
 create table if not exists Posts (
     Id uuid primary key,
     Title varchar(200) not null,

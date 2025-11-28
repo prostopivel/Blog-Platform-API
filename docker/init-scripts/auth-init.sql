@@ -1,3 +1,5 @@
+create extension if not exists "uuid-ossp";
+
 create table if not exists Users (
 	Id uuid primary key,
 	Username varchar(100) not null,

@@ -1,0 +1,48 @@
+services:
+  auth-db:
+    image: postgres:15
+    container_name: auth-db
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+      - ./init-scripts/auth-init.sql:/docker-entrypoint-initdb.d/01-auth-init.sql
+    networks:
+      - blog-platform-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  blog-db:
+    image: postgres:15
+    container_name: blog-db
+    environment:
+      POSTGRES_DB: blog_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    volumes:
+      - blog_db_data:/var/lib/postgresql/data
+      - ./init-scripts/blog-init.sql:/docker-entrypoint-initdb.d/01-blog-init.sql
+    networks:
+      - blog-platform-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  auth_db_data:
+  blog_db_data:
+
+networks:
+  blog-platform-network:
+    driver: bridge

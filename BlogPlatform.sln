@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{99181F4F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{AC75077C-0000-4712-B884-F4C3D25B621F}"
 	ProjectSection(SolutionItems) = preProject
+		docker\.env = docker\.env
 		docker\analytics.Dockerfile = docker\analytics.Dockerfile
 		docker\auth.Dockerfile = docker\auth.Dockerfile
 		docker\blog.Dockerfile = docker\blog.Dockerfile
@@ -94,7 +95,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogPlatform.Shared.API", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "init-scripts", "init-scripts", "{95CBF33B-9077-40A0-9F8B-4126EB07FEFA}"
 	ProjectSection(SolutionItems) = preProject
-		docker\init-scripts\analytics-init.sql = docker\init-scripts\analytics-init.sql
 		docker\init-scripts\auth-init.sql = docker\init-scripts\auth-init.sql
 		docker\init-scripts\blog-init.sql = docker\init-scripts\blog-init.sql
 	EndProjectSection
