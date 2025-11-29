@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: auth_db
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
@@ -25,7 +25,7 @@ services:
     environment:
       POSTGRES_DB: blog_db
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5433:5432"
     volumes:
@@ -39,9 +39,62 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - blog-platform-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  auth-service:
+    build:
+      context: ..
+      dockerfile: docker/auth.Dockerfile
+    container_name: auth-service
+    ports:
+      - "5001:5001"  # HTTP API
+      - "6001:6001"  # gRPC
+    depends_on:
+      auth-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - Database__ConnectionString=Host=auth-db;Database=auth_db;Username=postgres;Password=postgres
+      - Database__CommandTimeout=10
+      - Database__ConnectionTimeout=5
+      - Redis__ConnectionString=redis:6379
+      - Redis__InstanceName=AuthService
+      - Redis__CacheTimeoutMinutes=30
+      - Jwt__Secret=blog-platform-api-auth-service-nov-2025-by-pavel
+      - Jwt__Issuer=SimpleCloudDrive
+      - Jwt__Audience=SimpleCloudDrive
+      - Jwt__ExpiryMinutes=60
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:5001
+      - ASPNETCORE_GRPC_URLS=http://0.0.0.0:6001
+    networks:
+      - blog-platform-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
 volumes:
   auth_db_data:
   blog_db_data:
+  redis_data:
 
 networks:
   blog-platform-network:

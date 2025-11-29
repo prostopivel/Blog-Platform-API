@@ -6,7 +6,7 @@ create table if not exists Posts (
     Content text not null,
     UserId uuid not null,
     CreatedAt timestamp default now(),
-    UpdatedAt timestamp
+    UpdatedAt timestamp default null
 );
 
 create table if not exists Comments (
@@ -97,33 +97,32 @@ end;
 $$ language plpgsql;
 
 create or replace function create_post(
-	id uuid,
-	title varchar(200),
-	content text,
-	user_id uuid,
-	created_at timestamp,
-	updated_at timestamp
+	p_id uuid,
+	p_title varchar(200),
+	p_content text,
+	p_user_id uuid,
+	p_created_at timestamp
 ) returns uuid as $$
 begin
 	insert into Posts (Id, Title, Content, UserId, CreatedAt, UpdatedAt)
-	values (create_post.*);
+	values (p_id, p_title, p_content, p_user_id, p_created_at, null);
 	
-	return id;
+	return p_id;
 end;
 $$ language plpgsql;
 
 create or replace function update_post(
-	id uuid,
-	title varchar(200),
-	content text,
-	updated_at timestamp
+	p_id uuid,
+	p_title varchar(200),
+	p_content text,
+	p_updated_at timestamp
 ) returns uuid as $$
 begin
 	update Posts p
-	set p.Title = title, p.Content = content, p.UpdatedAt = updated_at
-	where p.Id = id;
+	set p.Title = p_title, p.Content = p_content, p.UpdatedAt = p_updated_at
+	where p.Id = p_id;
 	
-	return id;
+	return p_id;
 end;
 $$ language plpgsql;
 
@@ -155,17 +154,17 @@ end;
 $$ language plpgsql;
 
 create or replace function create_comment(
-	id uuid,
-	post_id uuid,
-	user_id uuid,
-	content text,
-	created_at timestamp
+	p_id uuid,
+	p_post_id uuid,
+	p_user_id uuid,
+	p_content text,
+	p_created_at timestamp
 ) returns uuid as $$
 begin
 	insert into Comments (Id, PostId, UserId, Content, CreatedAt)
-	values (create_comment.*);
+	values (p_id, p_post_id, p_user_id, p_content, p_created_at);
 	
-	return id;
+	return p_id;
 end;
 $$ language plpgsql;
 
@@ -194,14 +193,14 @@ end;
 $$ language plpgsql;
 
 create or replace function create_tag(
-	id uuid,
-	name varchar(100)
+	p_id uuid,
+	p_name varchar(100)
 ) returns uuid as $$
 begin
 	insert into Tags (Id, Name)
-	values (create_tag.*);
+	values (p_id, p_name);
 	
-	return id;
+	return p_id;
 end;
 $$ language plpgsql;
 
