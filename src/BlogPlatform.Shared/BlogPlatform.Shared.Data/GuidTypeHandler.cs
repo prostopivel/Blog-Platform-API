@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using System.Data;
 
-namespace BlogPlatform.Auth.Infrastructure
+namespace BlogPlatform.Shared.Data
 {
     internal class GuidTypeHandler : SqlMapper.TypeHandler<Guid>
     {

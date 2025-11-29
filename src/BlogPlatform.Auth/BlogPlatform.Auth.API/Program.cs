@@ -4,12 +4,13 @@ using BlogPlatform.Auth.Core.Interfaces.Repositories;
 using BlogPlatform.Auth.Core.Interfaces.Services;
 using BlogPlatform.Auth.Core.Services;
 using BlogPlatform.Auth.Grpc.Services;
-using BlogPlatform.Auth.Infrastructure.Data;
 using BlogPlatform.Auth.Infrastructure.Mapping;
 using BlogPlatform.Auth.Infrastructure.Repositories;
+using BlogPlatform.Shared.Caching.Extensions;
 using BlogPlatform.Shared.Caching.Interfaces;
 using BlogPlatform.Shared.Caching.Services;
 using BlogPlatform.Shared.Common.Models;
+using BlogPlatform.Shared.Data.Extensions;
 
 namespace BlogPlatform.Auth.API
 {
@@ -28,10 +29,6 @@ namespace BlogPlatform.Auth.API
 
             builder.Services.Configure<JwtSettings>(
                 builder.Configuration.GetSection("Jwt"));
-            builder.Services.Configure<RedisSettings>(
-                builder.Configuration.GetSection("Redis"));
-            builder.Services.Configure<DatabaseSettings>(
-                builder.Configuration.GetSection("Database"));
 
             builder.Services.AddControllers();
             builder.Services.AddSwaggerGen();
@@ -42,14 +39,20 @@ namespace BlogPlatform.Auth.API
             });
 
             builder.Services.AddPostgresDatabase(options =>
-                options.WithConnectionString(databaseSettings.ConnectionString));
-
-            builder.Services.AddStackExchangeRedisCache(options =>
             {
-                options.Configuration = redisSettings.ConnectionString;
+                options.ConnectionString = databaseSettings.ConnectionString;
+                options.CommandTimeout = databaseSettings.CommandTimeout;
+                options.ConnectionTimeout = databaseSettings.ConnectionTimeout;
+            });
+
+            builder.Services.AddRedisCaching(options =>
+            {
+                options.ConnectionString = redisSettings.ConnectionString;
+                options.CacheTimeoutMinutes = redisSettings.CacheTimeoutMinutes;
                 options.InstanceName = redisSettings.InstanceName;
             });
 
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<ICacheService, RedisCacheService>();

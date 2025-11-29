@@ -13,7 +13,6 @@
     <PackageReference Include="AspNetCore.HealthChecks.Npgsql" Version="9.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="StackExchange.Redis" Version="2.10.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
@@ -23,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\BlogPlatform.Shared\BlogPlatform.Shared.API\BlogPlatform.Shared.API.csproj" />
+    <ProjectReference Include="..\..\BlogPlatform.Shared\BlogPlatform.Shared.Data\BlogPlatform.Shared.Data.csproj" />
     <ProjectReference Include="..\BlogPlatform.Auth.Core\BlogPlatform.Auth.Core.csproj" />
     <ProjectReference Include="..\BlogPlatform.Auth.Grpc\BlogPlatform.Auth.Grpc.csproj" />
     <ProjectReference Include="..\BlogPlatform.Auth.Infrastructure\BlogPlatform.Auth.Infrastructure.csproj" />
