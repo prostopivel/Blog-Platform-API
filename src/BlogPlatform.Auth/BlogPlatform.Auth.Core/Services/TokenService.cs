@@ -1,5 +1,5 @@
-﻿using BlogPlatform.Auth.Core.Entities;
-using BlogPlatform.Auth.Core.Interfaces.Services;
+﻿using BlogPlatform.Auth.Core.Interfaces.Services;
+using BlogPlatform.Auth.Core.Models;
 using BlogPlatform.Shared.Common.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

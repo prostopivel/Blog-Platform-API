@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using BlogPlatform.Auth.Core.Entities;
 using BlogPlatform.Auth.Core.Interfaces.Repositories;
+using BlogPlatform.Auth.Core.Models;
 using BlogPlatform.Auth.Infrastructure.Entities;
 using Dapper;
 using System.Data;

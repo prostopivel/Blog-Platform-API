@@ -1,8 +1,8 @@
 ﻿using BlogPlatform.Auth.Core.Constants;
-using BlogPlatform.Auth.Core.Entities;
 using BlogPlatform.Auth.Core.Exceptions;
 using BlogPlatform.Auth.Core.Interfaces.Repositories;
 using BlogPlatform.Auth.Core.Interfaces.Services;
+using BlogPlatform.Auth.Core.Models;
 using BlogPlatform.Shared.Caching.Interfaces;
 using BlogPlatform.Shared.Common.Exceptions;
 using Microsoft.Extensions.Logging;

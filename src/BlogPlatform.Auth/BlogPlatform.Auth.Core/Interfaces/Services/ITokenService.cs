@@ -1,4 +1,4 @@
-﻿using BlogPlatform.Auth.Core.Entities;
+﻿using BlogPlatform.Auth.Core.Models;
 
 namespace BlogPlatform.Auth.Core.Interfaces.Services
 {

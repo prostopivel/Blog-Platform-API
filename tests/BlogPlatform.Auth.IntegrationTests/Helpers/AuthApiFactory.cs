@@ -9,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Respawn;
-using System.Data;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 

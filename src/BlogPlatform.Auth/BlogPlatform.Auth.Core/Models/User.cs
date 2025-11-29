@@ -1,4 +1,4 @@
-﻿namespace BlogPlatform.Auth.Core.Entities
+﻿namespace BlogPlatform.Auth.Core.Models
 {
     public class User
     {

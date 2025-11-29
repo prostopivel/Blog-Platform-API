@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BlogPlatform.Auth.Core.Entities;
+using BlogPlatform.Auth.Core.Models;
 using BlogPlatform.Auth.Infrastructure.Entities;
 
 namespace BlogPlatform.Auth.Infrastructure.Mapping
