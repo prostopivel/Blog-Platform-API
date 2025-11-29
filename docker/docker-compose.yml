@@ -70,6 +70,8 @@ services:
         condition: service_healthy
     environment:
       - Database__ConnectionString=Host=auth-db;Database=auth_db;Username=postgres;Password=postgres
+      - Database__CommandTimeout=10
+      - Database__ConnectionTimeout=5
       - Redis__ConnectionString=redis:6379
       - Redis__InstanceName=AuthService
       - Redis__CacheTimeoutMinutes=30
