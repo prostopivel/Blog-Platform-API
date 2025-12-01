@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="15.1.0" />
+    <PackageReference Include="Dapper" Version="2.1.66" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BlogPlatform.Shared\BlogPlatform.Shared.Common\BlogPlatform.Shared.Common.csproj" />
+    <ProjectReference Include="..\..\BlogPlatform.Shared\BlogPlatform.Shared.Data\BlogPlatform.Shared.Data.csproj" />
+    <ProjectReference Include="..\BlogPlatform.Blog.Core\BlogPlatform.Blog.Core.csproj" />
+  </ItemGroup>
+
 </Project>

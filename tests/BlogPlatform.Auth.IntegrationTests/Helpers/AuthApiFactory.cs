@@ -16,7 +16,7 @@ namespace BlogPlatform.Auth.IntegrationTests.Helpers
 {
     public class AuthApiFactory : BaseApiFactory<Program>
     {
-        private const string POSTGRE_CONTAINER_NAME = "postres";
+        private const string POSTGRE_CONTAINER_NAME = "auth-db";
         private const string REDIS_CONTAINER_NAME = "redis";
         private const string REDIS_INSTANCE_NAME = "AuthTest";
         private const string INIT_SCRIPT_NAME = "auth-init.sql";
@@ -51,6 +51,8 @@ namespace BlogPlatform.Auth.IntegrationTests.Helpers
                 (RedisContainer)Containers[REDIS_CONTAINER_NAME], REDIS_INSTANCE_NAME);
 
             builder.UseEnvironment("Testing");
+
+            base.ConfigureWebHost(builder);
         }
 
         public override async Task InitializeAsync()

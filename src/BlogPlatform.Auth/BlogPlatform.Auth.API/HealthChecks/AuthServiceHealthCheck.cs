@@ -9,7 +9,8 @@ namespace BlogPlatform.Auth.API.HealthChecks
         private readonly IAuthService _authService;
         private readonly ICacheService _cacheService;
 
-        public AuthServiceHealthCheck(IAuthService authService, ICacheService cacheService)
+        public AuthServiceHealthCheck(IAuthService authService,
+            ICacheService cacheService)
         {
             _authService = authService;
             _cacheService = cacheService;

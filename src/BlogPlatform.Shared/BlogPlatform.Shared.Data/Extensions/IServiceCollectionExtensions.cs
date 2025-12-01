@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using System.Data;
+using System.Data.Common;
 
 namespace BlogPlatform.Shared.Data.Extensions
 {
@@ -11,7 +12,7 @@ namespace BlogPlatform.Shared.Data.Extensions
     {
         public static IServiceCollection AddPostgresDatabase(
             this IServiceCollection services,
-             Action<DatabaseSettings> configureOptions)
+            Action<DatabaseSettings> configureOptions)
         {
             var settings = new DatabaseSettings();
             configureOptions(settings);
@@ -23,7 +24,7 @@ namespace BlogPlatform.Shared.Data.Extensions
                 opt.ConnectionTimeout = settings.ConnectionTimeout;
             });
 
-            services.AddScoped<IDbConnection>(provider =>
+            services.AddScoped<DbConnection>(provider =>
             {
                 var options = provider.GetRequiredService<IOptions<DatabaseSettings>>().Value;
 
@@ -33,10 +34,11 @@ namespace BlogPlatform.Shared.Data.Extensions
                     Timeout = options.ConnectionTimeout
                 };
 
-                var connection = new NpgsqlConnection(connectionStringBuilder.ConnectionString);
-                connection.Open();
-                return connection;
+                return new NpgsqlConnection(connectionStringBuilder.ConnectionString);
             });
+
+            services.AddScoped<IDbConnection>(provider =>
+                provider.GetRequiredService<DbConnection>());
 
             ConfigureDapper();
 

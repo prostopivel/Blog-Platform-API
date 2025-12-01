@@ -9,6 +9,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Data;
+using System.Data.Common;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 
@@ -16,9 +17,9 @@ namespace BlogPlatform.Tests.Common.Extensions
 {
     public static class IWebHostBuilderExtensions
     {
-        private const int DEFAULT_COMMAND_TIMOUT = 10;
-        private const int DEFAULT_CONNECTION_TIMOUT = 10;
-        private const int DEFAULT_CACHE_TIMEOUT_MINUTES = 10;
+        private const int DEFAULT_COMMAND_TIMOUT = 1000;
+        private const int DEFAULT_CONNECTION_TIMOUT = 1000;
+        private const int DEFAULT_CACHE_TIMEOUT_MINUTES = 1000;
 
         public static void ConfigureDb(this IWebHostBuilder builder,
             PostgreSqlContainer postgresContainer)
@@ -36,6 +37,13 @@ namespace BlogPlatform.Tests.Common.Extensions
                 // Remove existing Db
                 var descriptor = services.SingleOrDefault(
                     d => d.ServiceType == typeof(IDbConnection));
+                if (descriptor != null)
+                {
+                    services.Remove(descriptor);
+                }
+
+                descriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(DbConnection));
                 if (descriptor != null)
                 {
                     services.Remove(descriptor);
