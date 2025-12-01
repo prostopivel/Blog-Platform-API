@@ -1,6 +1,6 @@
 ﻿using BlogPlatform.Auth.API;
-using BlogPlatform.Auth.Core.Entities;
 using BlogPlatform.Auth.Core.Interfaces.Repositories;
+using BlogPlatform.Auth.Core.Models;
 using BlogPlatform.Auth.IntegrationTests.DTOs;
 using BlogPlatform.Auth.IntegrationTests.Helpers;
 using BlogPlatform.Tests.Common;

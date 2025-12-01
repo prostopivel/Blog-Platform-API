@@ -31,8 +31,9 @@ namespace BlogPlatform.Auth.API
                 builder.Configuration.GetSection("Jwt"));
 
             builder.Services.AddControllers();
-            builder.Services.AddSwaggerGen();
             builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+            builder.Services.AddLogging();
             builder.Services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<UserMappingProfile>();

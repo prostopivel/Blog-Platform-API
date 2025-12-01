@@ -64,6 +64,7 @@ namespace BlogPlatform.Auth.Infrastructure.Repositories
                 },
                 cancellationToken: token
             );
+
             var result = await _connection.ExecuteScalarAsync<Guid>(commandDefinition);
             return result;
         }
@@ -78,6 +79,7 @@ namespace BlogPlatform.Auth.Infrastructure.Repositories
                 parameters: new { user_email = email },
                 cancellationToken: token
             );
+
             var result = await _connection.ExecuteScalarAsync<bool>(commandDefinition);
             return result;
         }

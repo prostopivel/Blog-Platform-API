@@ -9,6 +9,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Data;
+using System.Data.Common;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 
@@ -36,6 +37,13 @@ namespace BlogPlatform.Tests.Common.Extensions
                 // Remove existing Db
                 var descriptor = services.SingleOrDefault(
                     d => d.ServiceType == typeof(IDbConnection));
+                if (descriptor != null)
+                {
+                    services.Remove(descriptor);
+                }
+
+                descriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(DbConnection));
                 if (descriptor != null)
                 {
                     services.Remove(descriptor);

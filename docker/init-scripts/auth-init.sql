@@ -54,14 +54,14 @@ end;
 $$ language plpgsql;
 
 create or replace function exists_user_by_email(
-    user_email varchar(100)
+	user_email varchar(100)
 ) returns boolean as $$
 begin
-    return exists(
-        select u.Id, u.Username, u.Email, u.PasswordHash 
-        from Users u
-        where u.Email = user_email
-    );
+	return exists(
+		select u.Id, u.Username, u.Email, u.PasswordHash 
+		from Users u
+		where u.Email = user_email
+	);
 end;
 $$ language plpgsql;
 
