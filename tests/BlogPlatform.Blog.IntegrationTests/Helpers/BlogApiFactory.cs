@@ -1,5 +1,6 @@
-﻿using BlogPlatform.Auth.API;
-using BlogPlatform.Auth.Core.Constants;
+﻿using BlogPlatform.Blog.API;
+using BlogPlatform.Blog.Core.Constants;
+using BlogPlatform.Blog.Infrastructure;
 using BlogPlatform.Tests.Common;
 using BlogPlatform.Tests.Common.Extensions;
 using BlogPlatform.Tests.Common.Interfaces;
@@ -12,23 +13,23 @@ using Respawn;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 
-namespace BlogPlatform.Auth.IntegrationTests.Helpers
+namespace BlogPlatform.Blog.IntegrationTests.Helpers
 {
-    public class AuthApiFactory : BaseApiFactory<Program>
+    public class BlogApiFactory : BaseApiFactory<Program>
     {
-        private const string POSTGRE_CONTAINER_NAME = "auth-db";
+        private const string POSTGRE_CONTAINER_NAME = "blog-db";
         private const string REDIS_CONTAINER_NAME = "redis";
-        private const string REDIS_INSTANCE_NAME = "AuthTest";
-        private const string INIT_SCRIPT_NAME = "auth-init.sql";
+        private const string REDIS_INSTANCE_NAME = "BlogTest";
+        private const string INIT_SCRIPT_NAME = "blog-init.sql";
 
         private Respawner _respawner = null!;
 
-        public AuthApiFactory()
+        public BlogApiFactory()
             : base()
         {
             Containers.Add(POSTGRE_CONTAINER_NAME, new PostgreSqlBuilder()
                 .WithImage("postgres:15")
-                .WithDatabase("auth_test")
+                .WithDatabase("blog_test")
                 .WithUsername("test_user")
                 .WithPassword("test_password")
                 .Build());
@@ -45,6 +46,7 @@ namespace BlogPlatform.Auth.IntegrationTests.Helpers
                 config.AddEnvironmentVariables();
             });
 
+            SqlMapperConfigurator.ConfigureEntities();
             builder.ConfigureDb(
                 (PostgreSqlContainer)Containers[POSTGRE_CONTAINER_NAME]);
             builder.ConfigureCache(
@@ -74,7 +76,9 @@ namespace BlogPlatform.Auth.IntegrationTests.Helpers
             _respawner = await Respawner.CreateAsync(connection, new RespawnerOptions
             {
                 DbAdapter = DbAdapter.Postgres,
-                SchemasToInclude = ["public"]
+                SchemasToInclude = ["public"],
+                WithReseed = true,
+                CommandTimeout = 60
             });
         }
 
@@ -88,6 +92,8 @@ namespace BlogPlatform.Auth.IntegrationTests.Helpers
 
         public async Task ResetAsync()
         {
+            await Task.Delay(100);
+
             using var scope = Services.CreateScope();
             var services = scope.ServiceProvider;
 
@@ -104,23 +110,15 @@ namespace BlogPlatform.Auth.IntegrationTests.Helpers
             var cache = services.GetRequiredService<IDistributedCache>();
             List<string> patterns =
             [
-                $"{CacheKeys.USER_BY_ID}:*",
-                $"{CacheKeys.USER_BY_EMAIL}:*",
-                $"{CacheKeys.TOKEN_USER}:*",
-                $"{CacheKeys.TOKEN_VALIDATION}:*"
+                $"{CacheKeys.TAGS_BY_POST_ID}:*",
+                $"{CacheKeys.POST_BY_ID}:*",
+                $"{CacheKeys.TAG_BY_NAME}:*"
             ];
 
             foreach (var pattern in patterns)
             {
                 await cache.RemoveByPatternAsync(pattern);
             }
-        }
-
-        public HttpClient CreateClientWithJwt(string token)
-        {
-            var client = CreateClient();
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-            return client;
         }
     }
 }

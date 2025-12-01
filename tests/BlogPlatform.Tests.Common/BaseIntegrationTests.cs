@@ -17,7 +17,8 @@ namespace BlogPlatform.Tests.Common
             _client = factory.CreateClientWithUserId(userId);
             _jsonOptions = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
         }
 

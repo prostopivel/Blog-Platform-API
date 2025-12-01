@@ -17,9 +17,9 @@ namespace BlogPlatform.Tests.Common.Extensions
 {
     public static class IWebHostBuilderExtensions
     {
-        private const int DEFAULT_COMMAND_TIMOUT = 10;
-        private const int DEFAULT_CONNECTION_TIMOUT = 10;
-        private const int DEFAULT_CACHE_TIMEOUT_MINUTES = 10;
+        private const int DEFAULT_COMMAND_TIMOUT = 1000;
+        private const int DEFAULT_CONNECTION_TIMOUT = 1000;
+        private const int DEFAULT_CACHE_TIMEOUT_MINUTES = 1000;
 
         public static void ConfigureDb(this IWebHostBuilder builder,
             PostgreSqlContainer postgresContainer)

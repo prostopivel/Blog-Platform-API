@@ -63,7 +63,7 @@ namespace BlogPlatform.Blog.API.Controllers
             mappedPost.Id = Guid.NewGuid();
             await _postService.CreateAsync(
                 mappedPost, userId, token);
-            return Created();
+            return Created($"/api/posts/{mappedPost.Id}", mappedPost.Id);
         }
 
         [HttpPut("{id}")]

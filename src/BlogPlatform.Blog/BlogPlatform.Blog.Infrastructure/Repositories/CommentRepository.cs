@@ -53,7 +53,15 @@ namespace BlogPlatform.Blog.Infrastructure.Repositories
                 cancellationToken: token
             );
 
-            var result = await _connection.QueryAsync<EntityWithCount<CommentEntity>>(commandDefinition);
+            var result = await _connection.QueryAsync<CommentEntity, long, EntityWithCount<CommentEntity>>(
+                commandDefinition,
+                map: (comment, totalCount) => new EntityWithCount<CommentEntity>
+                {
+                    Entity = comment,
+                    TotalCount = totalCount
+                },
+                splitOn: "total_count");
+
             return new PaginatedResult<Comment>
             {
                 Items = _mapper.Map<IEnumerable<Comment>>(result.Select(r => r.Entity)),

@@ -64,7 +64,14 @@ namespace BlogPlatform.Blog.Infrastructure.Repositories
                 cancellationToken: token
             );
 
-            var result = await _connection.QueryAsync<EntityWithCount<PostEntity>>(commandDefinition);
+            var result = await _connection.QueryAsync<PostEntity, long, EntityWithCount<PostEntity>>(
+                commandDefinition,
+                map: (post, totalCount) => new EntityWithCount<PostEntity>
+                {
+                    Entity = post,
+                    TotalCount = totalCount
+                },
+                splitOn: "total_count");
 
             return new PaginatedResult<Post>
             {
@@ -93,7 +100,14 @@ namespace BlogPlatform.Blog.Infrastructure.Repositories
                 cancellationToken: token
             );
 
-            var result = await _connection.QueryAsync<EntityWithCount<PostEntity>>(commandDefinition);
+            var result = await _connection.QueryAsync<PostEntity, long, EntityWithCount<PostEntity>>(
+                commandDefinition,
+                map: (post, totalCount) => new EntityWithCount<PostEntity>
+                {
+                    Entity = post,
+                    TotalCount = totalCount
+                },
+                splitOn: "total_count");
 
             return new PaginatedResult<Post>
             {

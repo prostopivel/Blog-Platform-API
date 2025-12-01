@@ -83,11 +83,10 @@ namespace BlogPlatform.Blog.Core.Services
                 };
             }
 
-            var postTasks = result.Items.Select(async post =>
-                await ConfigurePost(post, 1, 3, token: token))
-                .ToArray();
-
-            await Task.WhenAll(postTasks);
+            foreach (var post in result.Items)
+            {
+                await ConfigurePost(post, 1, 3, token: token);
+            }
 
             _logger.LogInformation("Post by {TagsCount} tags received, count: {Count}", tags.Count(), result.Items.Count());
 
@@ -112,11 +111,10 @@ namespace BlogPlatform.Blog.Core.Services
                 };
             }
 
-            var postTasks = result.Items.Select(async post =>
-                await ConfigurePost(post, 1, 3, token: token))
-                .ToArray();
-
-            await Task.WhenAll(postTasks);
+            foreach (var post in result.Items)
+            {
+                await ConfigurePost(post, 1, 3, token: token);
+            }
 
             _logger.LogInformation("Posts by user id {UserId} received, count: {Count}", userId, result.Items.Count());
 
@@ -174,7 +172,6 @@ namespace BlogPlatform.Blog.Core.Services
             await _unitOfWork.BeginTransactionAsync(token: token);
             try
             {
-                await _postRepository.CreateAsync(post, token: token);
                 await _postRepository.UpdateAsync(post, token: token);
                 await _tagService.UpdatePostTagsAsync(post.Tags.Select(t => t.Name), post.Id, token: token);
 
@@ -215,7 +212,7 @@ namespace BlogPlatform.Blog.Core.Services
             await InvalidatePostCache(id, token: token);
         }
 
-        public async Task<bool> IsUserLikeAsync(Guid postId,
+        public async Task<LikeResult> IsUserLikeAsync(Guid postId,
             Guid userId,
             CancellationToken token = default)
         {
@@ -224,13 +221,15 @@ namespace BlogPlatform.Blog.Core.Services
                 throw new NotFoundException($"Post {postId} not found");
             }
 
-            var result = await _likeRepository.IsLikedAsync(postId, userId, token);
+            var result = await _likeRepository.IsLikedAsync(postId, userId, token: token);
             _logger.LogInformation("User {UserId} is liked post {PostId}: {Result}", userId, postId, result);
 
-            return result;
+            var count = await _likeRepository.GetLikesCountAsync(postId, token: token);
+
+            return new LikeResult(result, count);
         }
 
-        public async Task<bool> ToggleLikeAsync(Guid postId,
+        public async Task<LikeResult> ToggleLikeAsync(Guid postId,
             Guid userId,
             CancellationToken token = default)
         {
@@ -239,10 +238,12 @@ namespace BlogPlatform.Blog.Core.Services
                 throw new NotFoundException($"Post {postId} not found");
             }
 
-            var result = await _likeRepository.ToggleLikeAsync(postId, userId, token);
+            var result = await _likeRepository.ToggleLikeAsync(postId, userId, token: token);
             _logger.LogInformation("User {UserId} like post {PostId}: {Result}", userId, postId, result);
 
-            return result;
+            var count = await _likeRepository.GetLikesCountAsync(postId, token: token);
+
+            return new LikeResult(result, count);
         }
 
         private async Task InvalidatePostCache(Guid postId,
@@ -263,16 +264,10 @@ namespace BlogPlatform.Blog.Core.Services
             int commentPageSize,
             CancellationToken token = default)
         {
-            var tagsTask = _tagService.GetPostTagsAsync(post.Id, token: token);
-            var commentsTask = _commentRepository.GetByPostIdAsync(
+            post.Tags = [.. await _tagService.GetPostTagsAsync(post.Id, token: token) ?? []];
+            post.Comments = await _commentRepository.GetByPostIdAsync(
                 post.Id, commentPage, commentPageSize, token: token);
-            var likesCountTask = _likeRepository.GetLikesCountAsync(post.Id, token: token);
-
-            await Task.WhenAll(tagsTask, commentsTask, likesCountTask);
-
-            post.Tags = [.. await tagsTask];
-            post.Comments = await commentsTask;
-            post.LikesCount = await likesCountTask;
+            post.LikesCount = await _likeRepository.GetLikesCountAsync(post.Id, token: token);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace BlogPlatform.Blog.Core.Interfaces.Services
         Task<Post> CreateAsync(Post request, Guid userId, CancellationToken token = default);
         Task<Post> UpdateAsync(Post request, Guid userId, CancellationToken token = default);
         Task DeleteAsync(Guid id, Guid userId, CancellationToken token = default);
-        Task<bool> IsUserLikeAsync(Guid postId, Guid userId, CancellationToken token = default);
-        Task<bool> ToggleLikeAsync(Guid postId, Guid userId, CancellationToken token = default);
+        Task<LikeResult> IsUserLikeAsync(Guid postId, Guid userId, CancellationToken token = default);
+        Task<LikeResult> ToggleLikeAsync(Guid postId, Guid userId, CancellationToken token = default);
     }
 }

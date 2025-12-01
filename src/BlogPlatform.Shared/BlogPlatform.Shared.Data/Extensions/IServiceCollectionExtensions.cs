@@ -34,9 +34,7 @@ namespace BlogPlatform.Shared.Data.Extensions
                     Timeout = options.ConnectionTimeout
                 };
 
-                var connection = new NpgsqlConnection(connectionStringBuilder.ConnectionString);
-                connection.Open();
-                return connection;
+                return new NpgsqlConnection(connectionStringBuilder.ConnectionString);
             });
 
             services.AddScoped<IDbConnection>(provider =>
