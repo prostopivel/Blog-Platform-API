@@ -1,5 +1,7 @@
 ﻿using BlogPlatform.Blog.Core.Interfaces.Services;
 using BlogPlatform.Shared.Caching.Interfaces;
+using BlogPlatform.Shared.Common.Exceptions;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace BlogPlatform.Blog.API.HealthChecks
@@ -137,6 +139,10 @@ namespace BlogPlatform.Blog.API.HealthChecks
             try
             {
                 await _commentService.GetByPostIdAsync(Guid.NewGuid(), 1, 1, token);
+                return HealthCheckResult.Healthy();
+            }
+            catch (NotFoundException)
+            {
                 return HealthCheckResult.Healthy();
             }
             catch (Exception ex)

@@ -1,6 +1,8 @@
 ﻿using BlogPlatform.Blog.Core.Interfaces.Repositories;
+using BlogPlatform.Blog.Infrastructure.Entities;
 using BlogPlatform.Shared.Grpc.Models;
 using Dapper;
+using Google.Protobuf.WellKnownTypes;
 using System.Data;
 
 namespace BlogPlatform.Blog.Infrastructure.Repositories
@@ -31,8 +33,14 @@ namespace BlogPlatform.Blog.Infrastructure.Repositories
                 cancellationToken: token
             );
 
-            var result = await _connection.QueryAsync<PostsByDateItem>(commandDefinition);
-            return result;
+            var result = await _connection.QueryAsync<PostsByDateItemEntity>(commandDefinition);
+            return result.Select(p => new PostsByDateItem()
+            {
+                Id = p.Id.ToString(),
+                CreatedAt = Timestamp.FromDateTime(p.CreatedAt),
+                CommentCount = p.CommentCount,
+                LikeCount = p.LikeCount
+            });
         }
 
         public async Task<IEnumerable<PostsByDateItem>> GetUserActivityPostsAsync(
@@ -54,11 +62,17 @@ namespace BlogPlatform.Blog.Infrastructure.Repositories
                 cancellationToken: token
             );
 
-            var result = await _connection.QueryAsync<PostsByDateItem>(commandDefinition);
-            return result;
+            var result = await _connection.QueryAsync<PostsByDateItemEntity>(commandDefinition);
+            return result.Select(p => new PostsByDateItem()
+            {
+                Id = p.Id.ToString(),
+                CreatedAt = Timestamp.FromDateTime(p.CreatedAt),
+                CommentCount = p.CommentCount,
+                LikeCount = p.LikeCount
+            });
         }
 
-        public async Task<IEnumerable<PostIdByDateItem>> GetUserActivityCommentsAsync(
+        public async Task<IEnumerable<IdsByDateItem>> GetUserActivityCommentsAsync(
             Guid userId,
             DateTime startDate,
             DateTime endDate,
@@ -77,11 +91,15 @@ namespace BlogPlatform.Blog.Infrastructure.Repositories
                 cancellationToken: token
             );
 
-            var result = await _connection.QueryAsync<PostIdByDateItem>(commandDefinition);
-            return result;
+            var result = await _connection.QueryAsync<IdsByDateItemEntity>(commandDefinition);
+            return result.Select(i => new IdsByDateItem()
+            {
+                Id = i.Id.ToString(),
+                CreatedAt = Timestamp.FromDateTime(i.CreatedAt)
+            });
         }
 
-        public async Task<IEnumerable<PostIdByDateItem>> GetUserActivityLikesAsync(
+        public async Task<IEnumerable<IdsByDateItem>> GetUserActivityLikesAsync(
             Guid userId,
             DateTime startDate,
             DateTime endDate,
@@ -100,8 +118,12 @@ namespace BlogPlatform.Blog.Infrastructure.Repositories
                 cancellationToken: token
             );
 
-            var result = await _connection.QueryAsync<PostIdByDateItem>(commandDefinition);
-            return result;
+            var result = await _connection.QueryAsync<IdsByDateItemEntity>(commandDefinition);
+            return result.Select(i => new IdsByDateItem()
+            {
+                Id = i.Id.ToString(),
+                CreatedAt = Timestamp.FromDateTime(i.CreatedAt)
+            });
         }
 
         public async Task<IEnumerable<TagStat>> GetTagsStatisticsAsync(
@@ -123,8 +145,13 @@ namespace BlogPlatform.Blog.Infrastructure.Repositories
                 cancellationToken: token
             );
 
-            var result = await _connection.QueryAsync<TagStat>(commandDefinition);
-            return result;
+            var result = await _connection.QueryAsync<TagStatEntity>(commandDefinition);
+            return result.Select(t => new TagStat()
+            {
+                Id = t.Id.ToString(),
+                Name = t.Name,
+                PostsCount = t.PostsCount
+            });
         }
     }
 }

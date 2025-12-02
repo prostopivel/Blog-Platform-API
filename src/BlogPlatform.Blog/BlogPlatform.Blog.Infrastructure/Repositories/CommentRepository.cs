@@ -53,7 +53,7 @@ namespace BlogPlatform.Blog.Infrastructure.Repositories
                 cancellationToken: token
             );
 
-            var result = await _connection.QueryAsync<CommentEntity, long, EntityWithCount<CommentEntity>>(
+            var result = await _connection.QueryAsync<CommentEntity, int, EntityWithCount<CommentEntity>>(
                 commandDefinition,
                 map: (comment, totalCount) => new EntityWithCount<CommentEntity>
                 {

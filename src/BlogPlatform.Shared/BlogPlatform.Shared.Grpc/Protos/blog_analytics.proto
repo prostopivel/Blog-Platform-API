@@ -10,6 +10,9 @@ option csharp_namespace = "BlogPlatform.Blog.Grpc";
 
 service BlogService {
   rpc GetPostsByDateRange (DateRangeRequest) returns (PostsByDateResponse);
+  rpc GetUserPostsActivity (UserDateRangeRequest) returns (PostsActivityResponse);
+  rpc GetUserCommentsActivity (UserDateRangeRequest) returns (IdsActivityResponse);
+  rpc GetUserLikesActivity (UserDateRangeRequest) returns (IdsActivityResponse);
   rpc GetUserActivity (UserDateRangeRequest) returns (AllActivityResponse);
   rpc GetTagsStatistics (TopRequest) returns (TagsStatisticsResponse);
 }
@@ -35,10 +38,18 @@ message PostsByDateResponse {
   repeated blogplatform.shared.models.PostsByDateItem items = 1;
 }
 
+message PostsActivityResponse {
+  repeated blogplatform.shared.models.PostsByDateItem items = 1;
+}
+
+message IdsActivityResponse {
+  repeated blogplatform.shared.models.IdsByDateItem items = 3;
+}
+
 message AllActivityResponse {
   repeated blogplatform.shared.models.PostsByDateItem p_items = 1;
-  repeated blogplatform.shared.models.PostIdByDateItem c_items = 2;
-  repeated blogplatform.shared.models.PostIdByDateItem l_items = 3;
+  repeated blogplatform.shared.models.IdsByDateItem c_items = 2;
+  repeated blogplatform.shared.models.IdsByDateItem l_items = 3;
 }
 
 message TagsStatisticsResponse {

@@ -6,8 +6,8 @@ namespace BlogPlatform.Blog.Core.Interfaces.Repositories
     {
         Task<IEnumerable<PostsByDateItem>> GetPostsByDateRangeAsync(DateTime startDate, DateTime endDate, CancellationToken token = default);
         Task<IEnumerable<TagStat>> GetTagsStatisticsAsync(int takeCount, DateTime startDate, DateTime endDate, CancellationToken token = default);
-        Task<IEnumerable<PostIdByDateItem>> GetUserActivityCommentsAsync(Guid userId, DateTime startDate, DateTime endDate, CancellationToken token = default);
-        Task<IEnumerable<PostIdByDateItem>> GetUserActivityLikesAsync(Guid userId, DateTime startDate, DateTime endDate, CancellationToken token = default);
+        Task<IEnumerable<IdsByDateItem>> GetUserActivityCommentsAsync(Guid userId, DateTime startDate, DateTime endDate, CancellationToken token = default);
+        Task<IEnumerable<IdsByDateItem>> GetUserActivityLikesAsync(Guid userId, DateTime startDate, DateTime endDate, CancellationToken token = default);
         Task<IEnumerable<PostsByDateItem>> GetUserActivityPostsAsync(Guid userId, DateTime startDate, DateTime endDate, CancellationToken token = default);
     }
 }

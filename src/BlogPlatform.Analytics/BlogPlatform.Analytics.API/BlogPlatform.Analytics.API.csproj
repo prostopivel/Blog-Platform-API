@@ -8,10 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
+    <PackageReference Include="System.Text.Json" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\..\BlogPlatform.Shared\BlogPlatform.Shared.API\BlogPlatform.Shared.API.csproj" />
+    <ProjectReference Include="..\BlogPlatform.Analytics.Core\BlogPlatform.Analytics.Core.csproj" />
+    <ProjectReference Include="..\BlogPlatform.Analytics.Infrastructure\BlogPlatform.Analytics.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

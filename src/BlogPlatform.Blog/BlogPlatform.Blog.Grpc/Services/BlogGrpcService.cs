@@ -47,7 +47,7 @@ namespace BlogPlatform.Blog.Grpc.Services
             {
                 if (!Guid.TryParse(request.Id, out var postId))
                 {
-                    _logger.LogError("Error parsing post id");
+                    _logger.LogError("Error parsing user id");
                     return new AllActivityResponse();
                 }
                 var result = await _analyticsService.GetUserActivity(
@@ -67,6 +67,93 @@ namespace BlogPlatform.Blog.Grpc.Services
             {
                 _logger.LogError(ex, "Error getting user activity");
                 return new AllActivityResponse();
+            }
+        }
+
+        public async override Task<PostsActivityResponse> GetUserPostsActivity(
+            UserDateRangeRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                if (!Guid.TryParse(request.Id, out var postId))
+                {
+                    _logger.LogError("Error parsing user id");
+                    return new PostsActivityResponse();
+                }
+                var result = await _analyticsService.GetUserActivity(
+                    postId,
+                    request.StartDate.ToDateTime(),
+                    request.EndDate.ToDateTime(),
+                    context.CancellationToken);
+
+                return new PostsActivityResponse
+                {
+                    Items = { result.PostsByDateItems }
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting user posts activity");
+                return new PostsActivityResponse();
+            }
+        }
+
+        public async override Task<IdsActivityResponse> GetUserCommentsActivity(
+            UserDateRangeRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                if (!Guid.TryParse(request.Id, out var postId))
+                {
+                    _logger.LogError("Error parsing user id");
+                    return new IdsActivityResponse();
+                }
+                var result = await _analyticsService.GetUserActivity(
+                    postId,
+                    request.StartDate.ToDateTime(),
+                    request.EndDate.ToDateTime(),
+                    context.CancellationToken);
+
+                return new IdsActivityResponse
+                {
+                    Items = { result.CommentsByDateItems }
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting user comments activity");
+                return new IdsActivityResponse();
+            }
+        }
+
+        public async override Task<IdsActivityResponse> GetUserLikesActivity(
+            UserDateRangeRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                if (!Guid.TryParse(request.Id, out var postId))
+                {
+                    _logger.LogError("Error parsing user id");
+                    return new IdsActivityResponse();
+                }
+                var result = await _analyticsService.GetUserActivity(
+                    postId,
+                    request.StartDate.ToDateTime(),
+                    request.EndDate.ToDateTime(),
+                    context.CancellationToken);
+
+                return new IdsActivityResponse
+                {
+                    Items = { result.LikesByDateItems }
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting user likes activity");
+                return new IdsActivityResponse();
             }
         }
 

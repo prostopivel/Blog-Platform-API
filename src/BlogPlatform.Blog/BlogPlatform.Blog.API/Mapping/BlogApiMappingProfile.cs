@@ -8,7 +8,11 @@ namespace BlogPlatform.Blog.API.Mapping
     {
         public BlogApiMappingProfile()
         {
-            CreateMap<Comment, CreateCommentRequest>();
+            CreateMap<CreateCommentRequest, Comment>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt =>
+                    opt.MapFrom(_ => DateTime.Now));
 
             CreateMap<CreatePostRequest, Post>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())

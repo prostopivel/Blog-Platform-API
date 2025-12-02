@@ -9,12 +9,12 @@ option csharp_namespace = "BlogPlatform.Shared.Grpc.Models";
 message PostsByDateItem {
   string id = 1;
   google.protobuf.Timestamp created_at = 2;
-  int32 like_count = 3;
-  int32 comment_count = 4;
+  int32 comment_count = 3;
+  int32 like_count = 4;
 }
 
-message PostIdByDateItem {
-  string post_id = 1;
+message IdsByDateItem {
+  string id = 1;
   google.protobuf.Timestamp created_at = 2;
 }
 
