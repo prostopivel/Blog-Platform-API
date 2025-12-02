@@ -28,19 +28,21 @@ create table if not exists Posts_Tags (
 	primary key (PostId, TagId)
 );
 
-create table if not exists Posts_Users (
+create table if not exists UserLikes (
 	PostId uuid references Posts(Id) on delete cascade,
 	UserId uuid not null,
 	primary key (PostId, UserId)
 );
 
 create index if not exists posts_userid_index on Posts (UserId);
+create index if not exists posts_created_at_index on Posts (CreatedAt);
 create index if not exists comments_postid_index on Comments (PostId);
+create index if not exists comments_created_at_index on Comments (CreatedAt);
 create index if not exists tag_name_index on Tags using hash (Name);
 create index if not exists post_tags_postid_index on Posts_Tags (PostId);
 create index if not exists post_tags_tagid_index on Posts_Tags (TagId);
-create index if not exists post_users_postid_index on Posts_Users (PostId);
-create index if not exists post_users_userid_index on Posts_Users (UserId);
+create index if not exists post_users_postid_index on UserLikes (PostId);
+create index if not exists post_users_userid_index on UserLikes (UserId);
 
 create or replace function get_post_by_id(
 	p_id uuid
@@ -336,8 +338,8 @@ create or replace function is_user_like_post(
 ) returns boolean as $$
 begin
 	return exists(
-		select pu.UserId from Posts_Users pu
-		where user_id = pu.UserId and post_id = pu.PostId
+		select ul.UserId from UserLikes pu
+		where user_id = ul.UserId and post_id = ul.PostId
 	);
 end;
 $$ language plpgsql;
@@ -347,8 +349,8 @@ create or replace function get_post_likes_count(
 ) returns integer as $$
 begin
 	return (
-		select count(*) from Posts_Users pu
-		where pu.PostId = post_id
+		select count(*) from UserLikes pu
+		where ul.PostId = post_id
 	);
 end;
 $$ language plpgsql;
@@ -359,16 +361,114 @@ create or replace function change_like_post_by_user(
 ) returns boolean as $$
 begin
 	if is_user_like_post(post_id, user_id) then
-		delete from Posts_Users pu
-		where post_id = pu.PostId and user_id = pu.UserId;
+		delete from UserLikes pu
+		where post_id = ul.PostId and user_id = ul.UserId;
 
 		return false;
 	else
-		insert into Posts_Users (PostId, UserId)
+		insert into UserLikes (PostId, UserId)
 		values (post_id, user_id);
 
 		return true;
 	end if;
+end;
+$$ language plpgsql;
+
+
+create or replace function get_posts_by_date_range(
+	start_date timestamp,
+	end_date timestamp
+) returns table (
+	id uuid,
+	created_at timestamp,
+	likes_count integer,
+	commens_count integer
+) as $$
+begin
+	return query
+	select p.Id, p.CreatedAt, get_post_likes_count(p.Id) as likes_count,
+	(
+		select count(*) from Comments c
+		where c.PostId = p.Id
+	) as commens_count from Posts p
+	where p.CreatedAt > start_date and p.CreatedAt < end_date
+	order by p.CreatedAt;
+end;
+$$ language plpgsql;
+
+create or replace function get_user_activity_posts(
+	user_id uuid,
+	start_date timestamp,
+	end_date timestamp
+) returns table (
+	id uuid,
+	created_at timestamp,
+	likes_count integer,
+	commens_count integer
+) as $$
+begin
+	return query
+	select p.Id, p.CreatedAt, get_post_likes_count(p.Id) as likes_count,
+	(
+		select count(*) from Comments c
+		where c.PostId = p.Id
+	) as commens_count from Posts p
+	where p.CreatedAt > start_date and p.CreatedAt < end_date and p.UserId = user_id
+	order by p.CreatedAt;
+end;
+$$ language plpgsql;
+
+create or replace function get_user_activity_comments(
+	user_id uuid,
+	start_date timestamp,
+	end_date timestamp
+) returns table (
+	id uuid,
+	created_at timestamp
+) as $$
+begin
+	return query
+	select c.Id, c.CreatedAt from Comments c
+	where c.CreatedAt > start_date and c.CreatedAt < end_date and c.UserId = user_id
+	order by c.CreatedAt;
+end;
+$$ language plpgsql;
+
+create or replace function get_user_activity_likes(
+	user_id uuid,
+	start_date timestamp,
+	end_date timestamp
+) returns table (
+	post_id uuid,
+	created_at timestamp
+) as $$
+begin
+	return query
+	select p.Id, p.CreatedAt from Posts p
+	join UserLikes ul on ul.PostId = p.Id
+	where ul.UserId = user_id and p.CreatedAt > start_date and p.CreatedAt < end_date
+	order by p.CreatedAt;
+end;
+$$ language plpgsql;
+
+create or replace function get_tags_statistics(
+	take_count integer,
+	start_date timestamp,
+	end_date timestamp
+) returns table (
+	id uuid,
+	name varchar(100),
+	posts_count integer
+) as $$
+begin
+	return query
+	select t.Id, t.Name, count(distinct p.Id) as posts_count from Tags t
+	left join Posts_Tags pt on pt.PostId = t.Id
+	left join Posts p on p.Id = pt.PostId
+	where p.CreatedAt > start_date and p.CreatedAt < end_date
+	group by t.Id, t.Name
+	order by posts_count desc
+	limit take_count;
 end;
 $$ language plpgsql;
 

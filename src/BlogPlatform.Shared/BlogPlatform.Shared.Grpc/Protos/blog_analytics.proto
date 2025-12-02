@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package blogplatform.blog;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "shared_models.proto";
+
+option csharp_namespace = "BlogPlatform.Blog.Grpc";
+
+service BlogService {
+  rpc GetPostsByDateRange (DateRangeRequest) returns (PostsByDateResponse);
+  rpc GetUserActivity (UserDateRangeRequest) returns (AllActivityResponse);
+  rpc GetTagsStatistics (TopRequest) returns (TagsStatisticsResponse);
+}
+
+message DateRangeRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+}
+
+message UserDateRangeRequest {
+  string id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message TopRequest {
+  int32 count = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message PostsByDateResponse {
+  repeated blogplatform.shared.models.PostsByDateItem items = 1;
+}
+
+message AllActivityResponse {
+  repeated blogplatform.shared.models.PostsByDateItem p_items = 1;
+  repeated blogplatform.shared.models.PostIdByDateItem c_items = 2;
+  repeated blogplatform.shared.models.PostIdByDateItem l_items = 3;
+}
+
+message TagsStatisticsResponse {
+  repeated blogplatform.shared.models.TagStat items = 1;
+}

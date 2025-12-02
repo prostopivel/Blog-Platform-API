@@ -15,7 +15,7 @@ COPY ["src/BlogPlatform.Auth/BlogPlatform.Auth.Core/BlogPlatform.Auth.Core.cspro
 COPY ["src/BlogPlatform.Auth/BlogPlatform.Auth.Infrastructure/BlogPlatform.Auth.Infrastructure.csproj", "src/BlogPlatform.Auth/BlogPlatform.Auth.Infrastructure/"]
 COPY ["src/BlogPlatform.Auth/BlogPlatform.Auth.Grpc/BlogPlatform.Auth.Grpc.csproj", "src/BlogPlatform.Auth/BlogPlatform.Auth.Grpc/"]
 COPY ["src/BlogPlatform.Shared/BlogPlatform.Shared.Common/BlogPlatform.Shared.Common.csproj", "src/BlogPlatform.Shared/BlogPlatform.Shared.Common/"]
-COPY ["src/BlogPlatform.Shared/BlogPlatform.Shared.Messaging/BlogPlatform.Shared.Messaging.csproj", "src/BlogPlatform.Shared/BlogPlatform.Shared.Messaging/"]
+COPY ["src/BlogPlatform.Shared/BlogPlatform.Shared.Data/BlogPlatform.Shared.Data.csproj", "src/BlogPlatform.Shared/BlogPlatform.Shared.Data/"]
 COPY ["src/BlogPlatform.Shared/BlogPlatform.Shared.Grpc/BlogPlatform.Shared.Grpc.csproj", "src/BlogPlatform.Shared/BlogPlatform.Shared.Grpc/"]
 RUN dotnet restore "src/BlogPlatform.Auth/BlogPlatform.Auth.API/BlogPlatform.Auth.API.csproj"
 

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package blogplatform.shared.models;
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "BlogPlatform.Shared.Grpc.Models";
+
+message PostsByDateItem {
+  string id = 1;
+  google.protobuf.Timestamp created_at = 2;
+  int32 like_count = 3;
+  int32 comment_count = 4;
+}
+
+message PostIdByDateItem {
+  string post_id = 1;
+  google.protobuf.Timestamp created_at = 2;
+}
+
+message TagStat {
+  string id = 1;
+  string name = 2;
+  int32 posts_count = 3;
+}

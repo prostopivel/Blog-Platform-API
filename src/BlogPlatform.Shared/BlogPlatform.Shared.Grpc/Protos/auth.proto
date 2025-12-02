@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option csharp_namespace = "BlogPlatform.Auth.Grpc";
 
-package auth;
+package blogplatform.auth;
 
 service AuthService {
   rpc ValidateToken (TokenRequest) returns (TokenValidationResponse);

@@ -9,7 +9,8 @@ namespace BlogPlatform.Auth.Grpc.Services
         private readonly IAuthService _authService;
         private readonly ILogger<AuthGrpcService> _logger;
 
-        public AuthGrpcService(IAuthService authService, ILogger<AuthGrpcService> logger)
+        public AuthGrpcService(IAuthService authService,
+            ILogger<AuthGrpcService> logger)
         {
             _authService = authService;
             _logger = logger;
@@ -36,8 +37,7 @@ namespace BlogPlatform.Auth.Grpc.Services
                 return new TokenValidationResponse
                 {
                     IsValid = isValid,
-                    UserId = userId?.ToString()
-                        ?? string.Empty
+                    UserId = userId?.ToString() ?? string.Empty
                 };
             }
             catch (Exception ex)
@@ -59,8 +59,7 @@ namespace BlogPlatform.Auth.Grpc.Services
 
                 return new UserIdResponse
                 {
-                    UserId = userId?.ToString()
-                        ?? string.Empty
+                    UserId = userId?.ToString() ?? string.Empty
                 };
             }
             catch (Exception ex)
