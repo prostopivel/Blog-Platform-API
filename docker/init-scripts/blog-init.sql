@@ -464,7 +464,7 @@ create or replace function get_tags_statistics(
 begin
 	return query
 	select t.Id, t.Name, count(distinct p.Id)::integer as posts_count from Tags t
-	left join Posts_Tags pt on pt.PostId = t.Id
+	left join Posts_Tags pt on pt.TagId = t.Id
 	left join Posts p on p.Id = pt.PostId
 	where p.CreatedAt > start_date and p.CreatedAt < end_date
 	group by t.Id, t.Name
