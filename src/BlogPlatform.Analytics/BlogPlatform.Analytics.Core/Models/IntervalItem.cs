@@ -1,6 +1,4 @@
-﻿using BlogPlatform.Analytics.Core.Interfaces;
-
-namespace BlogPlatform.Analytics.Core.Models
+﻿namespace BlogPlatform.Analytics.Core.Models
 {
     public record IntervalItem<T>
     {
