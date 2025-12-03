@@ -145,6 +145,26 @@ services:
       start_period: 30s
     restart: unless-stopped
 
+  gateway-service:
+    build:
+      context: ..
+      dockerfile: docker/gateway.Dockerfile
+    container_name: gateway-service
+    ports:
+      - "5000:5000"  # HTTP API
+    depends_on:
+      - auth-service
+      - blog-service
+      - analytics-service
+    environment:
+      - Microservices__Auth=http://auth-service:5001
+      - Microservices__Blog=http://blog-service:5002
+      - Microservices__Analytics=http://analytics-service:5003
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
+    networks:
+      - blog-platform-network
+    restart: unless-stopped
+
 volumes:
   auth_db_data:
   blog_db_data:

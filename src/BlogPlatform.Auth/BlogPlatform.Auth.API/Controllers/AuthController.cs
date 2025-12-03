@@ -55,6 +55,15 @@ namespace BlogPlatform.Auth.API.Controllers
             });
         }
 
+        [HttpPost("get-userId")]
+        public async Task<IActionResult> GetUserId([FromBody] ValidateTokenRequest request,
+            CancellationToken token = default)
+        {
+            var userId = await _authService.GetUserIdFromTokenAsync(request.Token,
+                token: token);
+            return Ok(new { userId });
+        }
+
         [HttpPost("validate")]
         public async Task<IActionResult> Validate([FromBody] ValidateTokenRequest request,
             CancellationToken token = default)
