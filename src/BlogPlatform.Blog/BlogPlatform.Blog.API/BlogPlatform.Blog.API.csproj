@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.Npgsql" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
+    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
+    <PackageReference Include="System.Text.Json" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BlogPlatform.Shared\BlogPlatform.Shared.API\BlogPlatform.Shared.API.csproj" />
+    <ProjectReference Include="..\..\BlogPlatform.Shared\BlogPlatform.Shared.Data\BlogPlatform.Shared.Data.csproj" />
+    <ProjectReference Include="..\BlogPlatform.Blog.Core\BlogPlatform.Blog.Core.csproj" />
+    <ProjectReference Include="..\BlogPlatform.Blog.Grpc\BlogPlatform.Blog.Grpc.csproj" />
+    <ProjectReference Include="..\BlogPlatform.Blog.Infrastructure\BlogPlatform.Blog.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

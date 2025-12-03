@@ -1,0 +1,175 @@
+services:
+  auth-db:
+    image: postgres:15
+    container_name: auth-db
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+      - ./init-scripts/auth-init.sql:/docker-entrypoint-initdb.d/01-auth-init.sql
+    networks:
+      - blog-platform-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  blog-db:
+    image: postgres:15
+    container_name: blog-db
+    environment:
+      POSTGRES_DB: blog_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - blog_db_data:/var/lib/postgresql/data
+      - ./init-scripts/blog-init.sql:/docker-entrypoint-initdb.d/01-blog-init.sql
+    networks:
+      - blog-platform-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - blog-platform-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  auth-service:
+    build:
+      context: ..
+      dockerfile: docker/auth.Dockerfile
+    container_name: auth-service
+    ports:
+      - "5001:5001"  # HTTP API
+      - "6001:6001"  # gRPC
+    depends_on:
+      auth-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - Database__ConnectionString=Host=auth-db;Database=auth_db;Username=postgres;Password=postgres
+      - Database__CommandTimeout=10
+      - Database__ConnectionTimeout=5
+      - Redis__ConnectionString=redis:6379
+      - Redis__InstanceName=AuthService
+      - Redis__CacheTimeoutMinutes=30
+      - Jwt__Secret=blog-platform-api-auth-service-nov-2025-by-pavel
+      - Jwt__Issuer=SimpleCloudDrive
+      - Jwt__Audience=SimpleCloudDrive
+      - Jwt__ExpiryMinutes=60
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:5001
+      - ASPNETCORE_GRPC_URLS=http://0.0.0.0:6001
+    networks:
+      - blog-platform-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  blog-service:
+    build:
+      context: ..
+      dockerfile: docker/blog.Dockerfile
+    container_name: blog-service
+    ports:
+      - "5002:5002"  # HTTP API
+      - "6002:6002"  # gRPC
+    depends_on:
+      blog-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - Database__ConnectionString=Host=blog-db;Database=blog_db;Username=postgres;Password=postgres;Include Error Detail=true
+      - Database__CommandTimeout=10
+      - Database__ConnectionTimeout=5
+      - Redis__ConnectionString=redis:6379
+      - Redis__InstanceName=AuthService
+      - Redis__CacheTimeoutMinutes=30
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:5002
+      - ASPNETCORE_GRPC_URLS=http://0.0.0.0:6002
+    networks:
+      - blog-platform-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5002/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  analytics-service:
+    build:
+      context: ..
+      dockerfile: docker/analytics.Dockerfile
+    container_name: analytics-service
+    ports:
+      - "5003:5003"  # HTTP API
+    depends_on:
+      - blog-service
+    environment:
+      - BlogService__GrpcAddress=http://blog-service:6002
+      - ASPNETCORE_URLS=http://0.0.0.0:5003
+    networks:
+      - blog-platform-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5003/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+
+  gateway-service:
+    build:
+      context: ..
+      dockerfile: docker/gateway.Dockerfile
+    container_name: gateway-service
+    ports:
+      - "5000:5000"  # HTTP API
+    depends_on:
+      - auth-service
+      - blog-service
+      - analytics-service
+    environment:
+      - Microservices__Auth=http://auth-service:5001
+      - Microservices__Blog=http://blog-service:5002
+      - Microservices__Analytics=http://analytics-service:5003
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
+    networks:
+      - blog-platform-network
+    restart: unless-stopped
+
+volumes:
+  auth_db_data:
+  blog_db_data:
+  redis_data:
+
+networks:
+  blog-platform-network:
+    driver: bridge
