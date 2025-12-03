@@ -17,8 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{AC7507
 		docker\.env = docker\.env
 		docker\analytics.Dockerfile = docker\analytics.Dockerfile
 		docker\auth.Dockerfile = docker\auth.Dockerfile
-		docker\docker-compose.yml = docker\docker-compose.yml
 		docker\blog.Dockerfile = docker\blog.Dockerfile
+		docker\docker-compose.yml = docker\docker-compose.yml
 		docker\gateway.Dockerfile = docker\gateway.Dockerfile
 	EndProjectSection
 EndProject
@@ -34,11 +34,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogPlatform.Auth.Integrati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogPlatform.Blog.IntegrationTests", "tests\BlogPlatform.Blog.IntegrationTests\BlogPlatform.Blog.IntegrationTests.csproj", "{0AAA30B8-7403-47F0-AC67-77969F07C035}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogPlatform.Analytics.IntegrationTests", "tests\BlogPlatform.Analytics.IntegrationTests\BlogPlatform.Analytics.IntegrationTests.csproj", "{E3E33840-4A7C-4F87-9D54-3271DFADC7B5}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BlogPlatform.ApiGateway", "BlogPlatform.ApiGateway", "{0AC62A24-7EAE-4ADB-A34A-90900C29413F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogPlatform.ApiGateway.IntegrationTests", "tests\BlogPlatform.ApiGateway.IntegrationTests\BlogPlatform.ApiGateway.IntegrationTests.csproj", "{061492CD-2AC3-4B80-8714-D5FBE8445F23}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogPlatform.Analytics.API", "src\BlogPlatform.Analytics\BlogPlatform.Analytics.API\BlogPlatform.Analytics.API.csproj", "{52B1717D-2050-4477-99EE-32D040DB3AF0}"
 EndProject
@@ -193,9 +189,7 @@ Global
 		{5F4C2FCD-983A-4B75-862E-1079785C8232} = {3754C398-2FBA-4D34-B30C-49857582C5BF}
 		{6D9C644C-2B21-4391-931F-4016DCFC4607} = {99181F4F-D12C-4C62-B859-283448E00EB4}
 		{0AAA30B8-7403-47F0-AC67-77969F07C035} = {99181F4F-D12C-4C62-B859-283448E00EB4}
-		{E3E33840-4A7C-4F87-9D54-3271DFADC7B5} = {99181F4F-D12C-4C62-B859-283448E00EB4}
 		{0AC62A24-7EAE-4ADB-A34A-90900C29413F} = {3754C398-2FBA-4D34-B30C-49857582C5BF}
-		{061492CD-2AC3-4B80-8714-D5FBE8445F23} = {99181F4F-D12C-4C62-B859-283448E00EB4}
 		{52B1717D-2050-4477-99EE-32D040DB3AF0} = {42D58907-65E3-42E6-AD01-A42CB46CEFBA}
 		{16BF665C-E5ED-4D92-B49E-5B91B5DC910B} = {42D58907-65E3-42E6-AD01-A42CB46CEFBA}
 		{C2CE8DEC-1DA0-432F-B6C5-F99888CEE5D1} = {42D58907-65E3-42E6-AD01-A42CB46CEFBA}
