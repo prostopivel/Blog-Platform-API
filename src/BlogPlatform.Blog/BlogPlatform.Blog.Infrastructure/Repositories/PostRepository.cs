@@ -64,7 +64,7 @@ namespace BlogPlatform.Blog.Infrastructure.Repositories
                 cancellationToken: token
             );
 
-            var result = await _connection.QueryAsync<PostEntity, long, EntityWithCount<PostEntity>>(
+            var result = await _connection.QueryAsync<PostEntity, int, EntityWithCount<PostEntity>>(
                 commandDefinition,
                 map: (post, totalCount) => new EntityWithCount<PostEntity>
                 {
@@ -100,7 +100,7 @@ namespace BlogPlatform.Blog.Infrastructure.Repositories
                 cancellationToken: token
             );
 
-            var result = await _connection.QueryAsync<PostEntity, long, EntityWithCount<PostEntity>>(
+            var result = await _connection.QueryAsync<PostEntity, int, EntityWithCount<PostEntity>>(
                 commandDefinition,
                 map: (post, totalCount) => new EntityWithCount<PostEntity>
                 {

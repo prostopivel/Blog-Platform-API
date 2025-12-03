@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlogPlatform.Blog.Core\BlogPlatform.Blog.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\..\BlogPlatform.Shared\BlogPlatform.Shared.Grpc\Protos\blog_analytics.proto" GrpcServices="Server" />
+  </ItemGroup>
+
 </Project>

@@ -105,7 +105,7 @@ services:
       redis:
         condition: service_healthy
     environment:
-      - Database__ConnectionString=Host=blog-db;Database=blog_db;Username=postgres;Password=postgres
+      - Database__ConnectionString=Host=blog-db;Database=blog_db;Username=postgres;Password=postgres;Include Error Detail=true
       - Database__CommandTimeout=10
       - Database__ConnectionTimeout=5
       - Redis__ConnectionString=redis:6379
@@ -121,6 +121,28 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    restart: unless-stopped
+
+  analytics-service:
+    build:
+      context: ..
+      dockerfile: docker/analytics.Dockerfile
+    container_name: analytics-service
+    ports:
+      - "5003:5003"  # HTTP API
+    depends_on:
+      - blog-service
+    environment:
+      - BlogService__GrpcAddress=http://blog-service:6002
+      - ASPNETCORE_URLS=http://0.0.0.0:5003
+    networks:
+      - blog-platform-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5003/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
     restart: unless-stopped
 
 volumes:

@@ -4,6 +4,7 @@ using BlogPlatform.Blog.API.Middleware;
 using BlogPlatform.Blog.Core.Interfaces.Repositories;
 using BlogPlatform.Blog.Core.Interfaces.Services;
 using BlogPlatform.Blog.Core.Services;
+using BlogPlatform.Blog.Grpc.Services;
 using BlogPlatform.Blog.Infrastructure;
 using BlogPlatform.Blog.Infrastructure.Mapping;
 using BlogPlatform.Blog.Infrastructure.Repositories;
@@ -60,16 +61,20 @@ namespace BlogPlatform.Blog.API
             builder.Services.AddScoped<ICommentRepository, CommentRepository>();
             builder.Services.AddScoped<ILikeRepository, LikeRepository>();
             builder.Services.AddScoped<IPostRepository, PostRepository>();
+            builder.Services.AddScoped<IAnalyticsRepository, AnalyticsRepository>();
             builder.Services.AddScoped<ICacheService, RedisCacheService>();
             builder.Services.AddScoped<ITagService, TagService>();
             builder.Services.AddScoped<ICommentService, CommentService>();
             builder.Services.AddScoped<IPostService, PostService>();
+            builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+
+            builder.Services.AddGrpc();
 
             builder.Services.AddHealthChecks()
                 .AddNpgSql(databaseSettings.ConnectionString, name: "blog-db")
                 .AddRedis(redisSettings.ConnectionString, name: "redis")
                 .AddCheck<BlogServiceHealthCheck>("blog-service",
-                HealthStatus.Degraded, timeout: TimeSpan.FromSeconds(10));
+                    HealthStatus.Degraded, timeout: TimeSpan.FromSeconds(10));
 
             var app = builder.Build();
 
@@ -86,6 +91,7 @@ namespace BlogPlatform.Blog.API
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.MapControllers();
+            app.MapGrpcService<BlogGrpcService>();
 
             app.MapHealthChecks("/health");
 

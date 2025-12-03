@@ -42,9 +42,13 @@ namespace BlogPlatform.Blog.Core.Services
             Guid userId,
             CancellationToken token = default)
         {
-            if (await _postRepository.ExistsAsync(comment.PostId, token: token))
+            if (await _commentRepository.ExistsAsync(comment.Id, token: token))
             {
                 throw new ConflictException($"Comment {comment.Id} already exists");
+            }
+            if (!await _postRepository.ExistsAsync(comment.PostId, token: token))
+            {
+                throw new NotFoundException($"Post {comment.PostId} not found");
             }
             comment.UserId = userId;
 

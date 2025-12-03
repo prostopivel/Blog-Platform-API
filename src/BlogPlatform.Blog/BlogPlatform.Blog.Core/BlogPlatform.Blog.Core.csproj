@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\BlogPlatform.Shared\BlogPlatform.Shared.Caching\BlogPlatform.Shared.Caching.csproj" />
     <ProjectReference Include="..\..\BlogPlatform.Shared\BlogPlatform.Shared.Common\BlogPlatform.Shared.Common.csproj" />
+    <ProjectReference Include="..\..\BlogPlatform.Shared\BlogPlatform.Shared.Grpc\BlogPlatform.Shared.Grpc.csproj" />
   </ItemGroup>
 
 </Project>
